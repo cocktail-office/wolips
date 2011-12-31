@@ -141,6 +141,7 @@ public class AppFormat extends ProjectFormat {
       cp.setTaskName("copy bootstrap");
       cp.setFile(this.getApplicatonTask().getWOEnvironment().bootstrap());
       cp.setTodir(getApplicatonTask().taskDir());
+      cp.setPreserveLastModified(true);
       cp.execute();
     }
   }
