@@ -234,14 +234,11 @@ public class WOComponentCreationPage extends WizardNewWOResourcePage {
 		this.setTitle(Messages.getString("WOComponentCreationPage.title"));
 		this.setDescription(Messages.getString("WOComponentCreationPage.description"));
 
-		if (selection != null) {
-			Object selectedObject = selection.getFirstElement();
-			if (selectedObject instanceof IFolder) {
-				IJavaElement parentJavaElement = JavaCore.create((IFolder) selectedObject);
-				if (parentJavaElement instanceof IPackageFragment) {
-					_currentSelection = parentJavaElement;
-					this.setContainerFullPath(componentPathForPackage((IPackageFragment)_currentSelection));
-				}
+		ProjectAdapter projectAdapter = (ProjectAdapter) getProject().getAdapter(ProjectAdapter.class);
+		if (projectAdapter != null) {
+			IContainer resource = (IContainer)ResourcesPlugin.getWorkspace().getRoot().findMember(getContainerFullPath());
+			if (!projectAdapter.isResourceContainer(resource)) {
+				this.setContainerFullPath(projectAdapter.getDefaultComponentsFolder().getFullPath());
 			}
 		}
 	}
