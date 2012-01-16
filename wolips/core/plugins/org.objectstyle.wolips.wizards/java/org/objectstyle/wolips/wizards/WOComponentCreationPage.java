@@ -113,6 +113,8 @@ import org.objectstyle.wolips.eomodeler.utils.StringLabelProvider;
 import org.objectstyle.wolips.locate.LocateException;
 import org.objectstyle.wolips.locate.LocatePlugin;
 import org.objectstyle.wolips.locate.result.LocalizedComponentsLocateResult;
+import org.objectstyle.wolips.core.resources.types.project.ProjectAdapter;
+import org.objectstyle.wolips.baseforuiplugins.utils.ErrorUtils;
 
 /**
  * @author mnolte
@@ -817,4 +819,13 @@ public class WOComponentCreationPage extends WizardNewWOResourcePage {
 		}
 
 	}
+	
+	public IProject getProject() {
+		IPath containerFullPath = getContainerFullPath();
+		if (containerFullPath == null) {
+			ErrorUtils.openErrorDialog(getShell(), "No Folder Selectd", "You must select a folder to create a new EOModel.");
+		}
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(containerFullPath.segment(0));
+		return project;
+	}	
 }
