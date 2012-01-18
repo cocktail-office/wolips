@@ -591,6 +591,7 @@ public abstract class WOTask extends Task {
 		Copy cp = this.getSubtaskFactory().getResourceCopy();
 
 		cp.setTodir(resourcesDir());
+		cp.setPreserveLastModified(true);
 		int count = 0;
 		Enumeration<WOFileSet> en = resources.elements();
 		while (en.hasMoreElements()) {
@@ -616,6 +617,7 @@ public abstract class WOTask extends Task {
 	protected void copyWsresources() throws BuildException {
 		Copy cp = this.getSubtaskFactory().getResourceCopy();
 		cp.setTodir(wsresourcesDir());
+		cp.setPreserveLastModified(true);
 
 		int count = 0;
 		Enumeration<WOFileSet> en = wsresources.elements();
@@ -648,6 +650,7 @@ public abstract class WOTask extends Task {
 	protected void copyLibs() throws BuildException {
 		Copy cp = this.getSubtaskFactory().getResourceCopy();
 		cp.setTodir(new File(resourcesDir(), "Java"));
+		cp.setPreserveLastModified(true);
 		cp.setFlatten(true);
 
 		Enumeration<FileSet> en = lib.elements();

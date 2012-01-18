@@ -154,6 +154,7 @@ class JApplicationMacWorker implements JApplicationWorker {
 		Copy cp = (Copy) task.createSubtask(Copy.class);
 		cp.setTodir(macOSDir);
 		cp.setFile(stub);
+		cp.setPreserveLastModified(true);
 		cp.execute();
 
 		Chmod chmod = (Chmod) task.createSubtask(Chmod.class);
@@ -167,6 +168,7 @@ class JApplicationMacWorker implements JApplicationWorker {
 			Copy cp = (Copy) task.createSubtask(Copy.class);
 			cp.setTodir(resourcesDir);
 			cp.setFile(task.getIcon());
+			cp.setPreserveLastModified(true);
 			cp.execute();
 		}
 	}
@@ -176,6 +178,7 @@ class JApplicationMacWorker implements JApplicationWorker {
 			Copy cp = (Copy) task.createSubtask(Copy.class);
 			cp.setTodir(javaDir);
 			cp.setFlatten(true);
+			cp.setPreserveLastModified(true);
 
 			Iterator it = task.getLibs().iterator();
 			while (it.hasNext()) {

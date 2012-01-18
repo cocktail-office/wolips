@@ -113,6 +113,8 @@ import org.objectstyle.wolips.eomodeler.utils.StringLabelProvider;
 import org.objectstyle.wolips.locate.LocateException;
 import org.objectstyle.wolips.locate.LocatePlugin;
 import org.objectstyle.wolips.locate.result.LocalizedComponentsLocateResult;
+import org.objectstyle.wolips.baseforuiplugins.utils.ErrorUtils;
+import org.objectstyle.wolips.core.resources.types.project.ProjectAdapter;
 
 /**
  * @author mnolte
@@ -230,20 +232,11 @@ public class WOComponentCreationPage extends WizardNewWOResourcePage {
 	 *            the current selection
 	 */
 	public WOComponentCreationPage(IStructuredSelection selection) {
+	
 		super("createWOComponentPage1", WOComponentCreationPage.processSelection(selection));
 		this.setTitle(Messages.getString("WOComponentCreationPage.title"));
 		this.setDescription(Messages.getString("WOComponentCreationPage.description"));
 
-		if (selection != null) {
-			Object selectedObject = selection.getFirstElement();
-			if (selectedObject instanceof IFolder) {
-				IJavaElement parentJavaElement = JavaCore.create((IFolder) selectedObject);
-				if (parentJavaElement instanceof IPackageFragment) {
-					_currentSelection = parentJavaElement;
-					this.setContainerFullPath(componentPathForPackage((IPackageFragment)_currentSelection));
-				}
-			}
-		}
 	}
 
 	public static IStructuredSelection processSelection(IStructuredSelection selection) {
@@ -326,6 +319,14 @@ public class WOComponentCreationPage extends WizardNewWOResourcePage {
 	public void createControl(Composite parent) {
 		// inherit default container and name specification widgets
 		super.createControl(parent);
+
+		ProjectAdapter projectAdapter = (ProjectAdapter) getProject().getAdapter(ProjectAdapter.class);
+		if (projectAdapter != null) {
+			IContainer resource = (IContainer)ResourcesPlugin.getWorkspace().getRoot().findMember(getContainerFullPath());
+			if (!projectAdapter.isResourceContainer(resource)) {
+				setContainerFullPath(projectAdapter.getDefaultComponentsFolder().getFullPath());
+			}
+		}
 
 		Composite composite = (Composite) getControl();
 		// WorkbenchHelp.setHelp(composite,
@@ -453,10 +454,13 @@ public class WOComponentCreationPage extends WizardNewWOResourcePage {
 			// not possible ( see validatePage() )
 			setErrorMessage("unknown error");
 			return false;
+		case 1:
+			componentCreator = new WOComponentCreator(getProject(), componentName, packageName, superclassName, _bodyCheckbox.getSelection(), _apiCheckbox.getSelection(), this);
+			break;
 		default:
 			// determine parent resource for component creator by removing
 			// first element (workspace) from full path
-			IFolder subprojectFolder = actualProject.getFolder(getContainerFullPath().removeFirstSegments(1));
+			IFolder subprojectFolder = getProject().getFolder(getContainerFullPath().removeFirstSegments(1));
 			componentCreator = new WOComponentCreator(subprojectFolder, componentName, packageName, superclassName, _bodyCheckbox.getSelection(), _apiCheckbox.getSelection(), this);
 			break;
 		}
@@ -819,5 +823,14 @@ public class WOComponentCreationPage extends WizardNewWOResourcePage {
 			handleSelectionEvent(event);
 		}
 
+	}
+	
+	public IProject getProject() {
+		IPath containerFullPath = getContainerFullPath();
+		if (containerFullPath == null) {
+			ErrorUtils.openErrorDialog(getShell(), "No Folder Selectd", "You must select a folder to create a new EOModel.");
+		}
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(containerFullPath.segment(0));
+		return project;
 	}
 }
