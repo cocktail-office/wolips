@@ -161,7 +161,7 @@
             icon="icons/woproject/woapplication_wiz.gif"
             category="org.objectstyle.wolips.wizards"
             project="true"
-            id="org.objectstyle.wolips.wizards.new.wo.5.1.errestframework">
+            id="org.objectstyle.wolips.wizards.new.wo.5.1.errestapplication">
             <class class="org.objectstyle.wolips.wizards.ERRestApplicationWizard">
               <parameter name="wotype" value="true"/>
             </class>
