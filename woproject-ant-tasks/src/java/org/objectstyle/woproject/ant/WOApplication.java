@@ -272,6 +272,7 @@ public class WOApplication extends WOTask {
       cp.setProject(getProject());
       cp.setTaskName(getTaskName());
       cp.setLocation(getLocation());
+      cp.setPreserveLastModified(true);
 
       cp.setTodir(embeddedFrameworksDir());
 
@@ -320,6 +321,7 @@ public class WOApplication extends WOTask {
     cp.setProject(getProject());
     cp.setTaskName(getTaskName());
     cp.setLocation(getLocation());
+    cp.setPreserveLastModified(true);
 
     cp.setTodir(contentsDir());
 
